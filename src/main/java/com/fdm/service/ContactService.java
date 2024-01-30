@@ -1,6 +1,7 @@
 package com.fdm.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -22,8 +23,12 @@ public class ContactService {
 		return contactRepo.findAll();
 	}
 	
-	public Contact retrieveContact(Long id) {
-		return contactRepo.findById(id).get(); //findById returns optional. use get method on optional
+	public Contact retrieveContact(Long contactId) throws ContactNotFoundException {
+		Optional<Contact> contactOptional = contactRepo.findById(contactId);
+		if(!contactOptional.isPresent()) {
+			throw new ContactNotFoundException("Contact with id "+ contactId+"");
+		}
+		return contactOptional.get();
 	}
 	
 	public Contact createContact(Contact contact) {
